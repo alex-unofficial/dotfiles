@@ -1,0 +1,177 @@
+"" plugins
+call plug#begin()
+    " lsp support
+    Plug 'prabirshrestha/vim-lsp'
+    Plug 'mattn/vim-lsp-settings'
+
+    " autocomplete
+    Plug 'prabirshrestha/asyncomplete.vim'
+    Plug 'prabirshrestha/asyncomplete-lsp.vim'
+
+    " color-schemes
+    Plug 'flazz/vim-colorschemes'
+
+    " status line
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+
+    " git wrapper
+    Plug 'tpope/vim-fugitive'
+
+    " vim surround
+    Plug 'tpope/vim-surround'
+
+    " fzf fuzzy finder
+    Plug 'junegunn/fzf'
+    Plug 'junegunn/fzf.vim'
+
+    " language support
+    Plug 'sheerun/vim-polyglot'
+
+    " latex live preview
+    Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
+
+    " Julia vim support
+    Plug 'JuliaEditorSupport/julia-vim'
+
+call plug#end()
+
+"" general settings
+syntax on
+set backspace=indent,eol,start
+set hidden
+set number cursorline
+set wrap linebreak nolist
+
+"" editing vimrc
+command! Reload :source $VIMRC
+command! Vimrc :edit $VIMRC
+command! Rc :ped $VIMRC
+augroup reload_vimrc | au!
+    au BufWritePost $VIMRC Reload
+augroup END
+
+"" leader key
+let mapleader=' '
+
+"" Set color-scheme
+set background=dark
+colorscheme gruvbox
+
+"" status line
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'minimalist'
+
+"" search settings
+set ignorecase smartcase
+set gdefault
+set incsearch
+set hlsearch
+nnoremap <silent> <leader><leader> :nohlsearch<cr>
+
+"" indentation settings
+filetype plugin indent on
+
+"tab indent-line
+nnoremap <tab> :><cr>
+nnoremap <S-tab> :<<cr>
+vnoremap <tab> >gv
+vnoremap <S-tab> <gv
+
+"" movement settings
+"intuitive scrolling in normal mode
+nnoremap <up> <c-y>
+nnoremap <down> <c-e>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
+"disable arrow keys in insert mode
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+"use C-h/l to change buffers
+nnoremap <C-h> :bprevious<cr>
+nnoremap <C-l> :bnext<cr>
+"change windows using leader+direction
+nnoremap <leader>h <C-w>h
+nnoremap <leader>j <C-w>j
+nnoremap <leader>k <C-w>k
+nnoremap <leader>l <C-w>l
+
+"" surround selection in visual mode
+vmap ( S)gv
+vmap ) S)gv
+
+vmap { S}gv
+vmap } S}gv
+
+"" fzf mappings
+nnoremap <leader>p :Files<cr>
+nnoremap <leader>f :BLines<cr>
+nnoremap <leader>s :Rg<cr>
+
+" latex live preview settings
+let g:livepreview_previewer = 'zathura'
+let g:livepreview_cursorhold_recompile = 0
+let g:livepreview_use_biber = 1
+
+"" lsp settings
+function! s:on_lsp_buffer_enabled() abort
+    setlocal omnifunc=lsp#complete
+    setlocal signcolumn=yes
+    if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+
+    " useful commands
+    nmap <buffer> gd <plug>(lsp-definition)
+    nmap <buffer> gs <plug>(lsp-document-symbol-search)
+    nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+    nmap <buffer> gr <plug>(lsp-references)
+    nmap <buffer> gi <plug>(lsp-implementation)
+    nmap <buffer> gt <plug>(lsp-type-definition)
+    nmap <buffer> <leader>rn <plug>(lsp-rename)
+    nmap <buffer> g[ <plug>(lsp-previous-diagnostic)
+    nmap <buffer> g] <plug>(lsp-next-diagnostic)
+    nmap <buffer> K <plug>(lsp-hover)
+    nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
+    nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
+endfunction
+
+" disable diagnostics
+let g:lsp_diagnostics_enabled = 0
+
+" enable lsp semantic highligting
+let g:lsp_semantic_enabled = 1
+
+augroup lsp_install
+    au!
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+"" autocomplete settings
+let g:asyncomplete_auto_popup = 0
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ asyncomplete#force_refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" allow modifying the completeopt variable, or it will
+" be overridden all the time
+let g:asyncomplete_auto_completeopt = 0
+set completeopt=menuone,noinsert,noselect,preview
+
+"" man pager
+source $VIMRUNTIME/ftplugin/man.vim
+set keywordprg=:Man
+
+"" Set greek language map
+set langmap=ΑA,ΒB,ΨC,ΔD,ΕE,ΦF,ΓG,ΗH,ΙI,ΞJ,ΚK,ΛL,ΜM,ΝN,ΟO,ΠP,QQ,ΡR,ΣS,ΤT,ΘU,ΩV,WW,ΧX,ΥY,ΖZ,αa,βb,ψc,δd,εe,φf,γg,ηh,ιi,ξj,κk,λl,μm,νn,οo,πp,qq,ρr,σs,τt,θu,ωv,ςw,χx,υy,ζz
+
+"" oddities
+command TTS :silent !festival --tts %

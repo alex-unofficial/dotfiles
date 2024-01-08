@@ -1,0 +1,26 @@
+[user]
+	name = alex-unofficial
+	email = athanasiadisalex2@gmail.com
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+	ui = true
+[color "status"]
+	added = green
+	changed = yellow
+	untracked = red
+[push]
+	default = current
+[core]
+	editor = vim
+	pager = less
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[init]
+	defaultBranch = master
+[credential]
+	helper = /usr/lib/git-core/git-credential-libsecret
