@@ -113,9 +113,10 @@ alias zshrc="$EDITOR ~/.zshrc"
 alias ohmyzsh="$EDITOR ~/.oh-my-zsh/oh-my-zsh.sh"
 alias vimrc="$EDITOR $VIMRC"
 
-alias ls="exa"
+alias ls="exa --icons --git"
 alias tree="ls -T"
-alias l="ls -la"
+alias l="ls -l"
+alias la="ls -la"
 
 alias cat="bat"
 
